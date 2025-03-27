@@ -1,5 +1,5 @@
 <script setup>
-  import { ref } from 'vue'
+    import { ref } from 'vue'
   
   const topCategories = ref([
     { name: 'Seni Lukis', courses: 28, icon: 'mdi-palette' },
@@ -42,46 +42,13 @@
       category: 'Memasak'
     },
   ])
-
-  const discussions = ref([
-  { author: 'Halima', date: 'Senin, 10 Maret 2025', title: 'Makanan Untuk Berbuka Puasa', replies: 1, members: 3 },
-  { author: 'Halima', date: 'Senin, 10 Maret 2025', title: 'Makanan Untuk Berbuka Puasa', replies: 1, members: 3 },
-  { author: 'Halima', date: 'Senin, 10 Maret 2025', title: 'Makanan Untuk Berbuka Puasa', replies: 1, members: 3 }
-]);
 </script>
 
 <template>
     <v-app>
-        <v-main class="gradient-background">
+        <v-main class="pt-6">
             <v-container fluid>
-                <!-- Header Section -->
-                <v-row no-gutters class="mb-6 pl-10">
-                    <v-col cols="12" md="6" class="d-flex flex-column justify-center ">
-                    <h1 class="text-h3 font-weight-bold mb-4">New Day, New Skills. Learn, Create, Thrive!</h1>
-                    <h2 class="text-subtitle-1 mb-4 text-medium-emphasis">
-                        Belajar keterampilan praktis yang bisa 
-                        langsung diterapkan dalam kehidupan sehari-hari! Dari menjahit, berkebun, memasak, 
-                        hingga keterampilan lainnya—jadilah lebih mandiri dan kreatif bersama kami.
-                    </h2>
-                    <v-btn 
-                        color="#50478A" 
-                        size="large" 
-                        class="mt-2 align-self-start" 
-                        rounded="lg"
-                    >
-                        Get Started!
-                    </v-btn>
-                    </v-col>
-                    <v-col cols="12" md="6" class="d-flex justify-center align-center">
-                    <img 
-                        src="/assets/heropic.png" 
-                        max-height="300" 
-                        contain
-                        class="mx-auto"
-                    ></img>
-                    </v-col>
-                </v-row>
-    
+
                 <!-- Top Categories -->
                 <v-container>
                     <v-row no-gutters class="mb-6">
@@ -91,7 +58,9 @@
                                     <h2 class="text-h5 font-weight-bold">Top Category</h2>
                                 </v-col>
                                 <v-col cols="6" class="text-right">
-                                    <v-btn variant="outlined" rounded="xl" border="true" color="#50478A">See All</v-btn>
+                                    <v-btn variant="outlined" rounded="xl" border="true" color="#50478A"  @click="$router.push('/akademi/course/category')">
+                                        See All
+                                    </v-btn>
                                 </v-col>
                             </v-row>
                             
@@ -136,7 +105,9 @@
                                     <h2 class="text-h5 font-weight-bold">Popular Courses</h2>
                                 </v-col>
                                 <v-col cols="6" class="text-right">
-                                    <v-btn variant="outlined" rounded="xl" border="true" color="#50478A">See All</v-btn>
+                                    <v-btn variant="outlined" rounded="xl" border="true" color="#50478A" @click="$router.push('/akademi/course/popular')">
+                                        See All
+                                    </v-btn>
                                 </v-col>
                             </v-row>
                             
@@ -190,118 +161,13 @@
                         </v-col>
                     </v-row>
                 </v-container>
-    
-                <!-- CV Improvement Section -->
-                <v-container>
-                    <v-row>
-                    <v-col cols="12">
-                        <v-card class="pa-6 rounded-lg gradient-bg-cv" >
-                        <v-row align="center">
 
-                            <v-col cols="12" md="4">
-                            <img src="/assets/cv-review.png" height="200" contain></img>
-                            </v-col>
-
-                            <v-col cols="12" md="6">
-                            <h2 class="text-h4 font-weight-bold">Tingkatkan Peluangmu dengan CV yang Menarik!</h2>
-                            <p class="text-body-2 mt-2">
-                                Apakah CV-mu sudah cukup kuat untuk menarik perhatian recruiter? Biarkan para ahli membantu!
-                            </p>
-                            <ul class="text-body-2 mt-1">
-                                <li>✅ Analisis Profesional – Dapatkan masukan dari pakar industri</li>
-                                <li>✅ Optimasi ATS-Friendly – Pastikan CV-mu lolos seleksi awal</li>
-                                <li>✅ Meningkatkan Kesempatan – Buat CV yang standout di mata recruiter</li>
-                            </ul>
-                            <v-btn color="#50478A" class="mt-3">Daftar Sekarang</v-btn>
-                            </v-col>
-                            
-                        </v-row>
-                        </v-card>
-                    </v-col>
-                    </v-row>
-                </v-container>
-    
-                <!-- Community Discussion Section -->
-                <v-container class="mt-6">
-                    <h2 class="text-h4 font-weight-bold text-center">Diskusi dan Komunitas</h2>
-                    <p class="text-center text-medium-emphasis mb-4">Bergabung dalam diskusi, ajukan pertanyaan, dan berbagi ilmu dengan komunitas!</p>
-                    <v-row no-gutters class="mb-4 mt-7 align-center">
-                                <v-col cols="6">
-                                    <h2 class="text-h5 font-weight-bold">Popular Courses</h2>
-                                </v-col>
-                                <v-col cols="6" class="text-right">
-                                    <v-btn variant="outlined" rounded="xl" border="true" color="#50478A">See All</v-btn>
-                                </v-col>
-                            </v-row>
-                    <v-row>
-                    <v-col 
-                        v-for="(discussion, index) in discussions" 
-                        :key="index" 
-                        cols="12" 
-                        md="4"
-                        class="d-flex"
-                    >
-                        <v-card 
-                            class="pa-4 flex-grow-1 d-flex flex-column " 
-                            elevation="2"
-                            rounded="lg"
-                            variant="outlined"
-                            style="border-color: #50478A;"
-                            >
-                            <p class="text-caption text-medium-emphasis">by {{ discussion.author }}, {{ discussion.date }}</p>
-                            <h3 class="text-subtitle-1 font-weight-bold flex-grow-1">{{ discussion.title }}</h3>
-                            <v-row class="mt-2">
-                                <v-col cols="6">
-                                <p class="text-caption">💬 {{ discussion.replies }} balasan</p>
-                                </v-col>
-                                <v-col cols="6" class="text-right">
-                                <p class="text-caption">👥 {{ discussion.members }} orang</p>
-                                </v-col>
-                            </v-row>
-                            <v-btn 
-                                color="#50478A" 
-                                background-color="#50478A"
-                                variant="flat" 
-                                block
-                                class="mt-3"
-                            > 
-                                Lihat 
-                            </v-btn>
-                        </v-card>
-                    </v-col>
-                    </v-row>
-                </v-container>
-    
-                <!-- Job Opportunities Section -->
-                <v-container>
-                    <v-row>
-                    <v-col cols="12">
-                        <v-card class="pa-6 rounded-lg gradient-bg-job" >
-                        <v-row align="center">
-                            <v-col cols="12" md="6">
-                            <h2 class="text-h3 font-weight-bold">Kesempatan Baru, Karier Baru!</h2>
-                            <p class="text-body-2">Jelajahi lowongan pekerjaan terbaru dan wujudkan karier impianmu hari ini!</p>
-                            <v-btn color="#50478A" class="mt-3">Lamar Sekarang</v-btn>
-                            </v-col>
-                            <v-col cols="12" md="6" class=" text-right">
-                            <img src="/assets/job-opportunity.png" height="250" contain></img>
-                            </v-col>
-                        </v-row>
-                        </v-card>
-                    </v-col>
-                    </v-row>
-                </v-container>
             </v-container>
         </v-main>
     </v-app>
 </template>
-    
+
 <style scoped>
-    .gradient-background {
-        background: linear-gradient(180deg, 
-        rgba(255, 206, 174, 1) 0%, 
-        rgba(255, 255, 255, 1) 50%);
-    }
 
     .category-badge {
     position: absolute;
@@ -335,18 +201,6 @@
     .scale-up {
         transform: scale(1.05);
         transition: transform 0.3s ease;
-    }
-
-    .gradient-bg-cv {
-        background: linear-gradient(256deg, 
-        rgba(255, 176, 123, 1) 0%, 
-        rgba(253, 230, 98, 0.5) 80%);
-    }
-
-    .gradient-bg-job {
-        background: linear-gradient(-256deg, 
-        rgba(255, 176, 123, 1) 0%, 
-        rgba(253, 230, 98, 0.5) 80%);
     }
 
     .text-body-2 {

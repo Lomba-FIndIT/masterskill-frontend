@@ -57,7 +57,7 @@
   /* Footer container utama */
   .footer {
     width: 100%;
-    background-color: #ffdd00;
+    background-color: #FFFDEE;
     text-align: center;
     padding-bottom: 0; /* Menghapus padding bawah */
   }

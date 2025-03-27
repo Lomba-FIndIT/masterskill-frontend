@@ -55,7 +55,7 @@
         <v-main class="gradient-background">
             <v-container fluid>
                 <!-- Header Section -->
-                <v-row no-gutters class="mb-6 pl-10">
+                <v-row no-gutters class="mb-6 pl-8 pt-6">
                     <v-col cols="12" md="6" class="d-flex flex-column justify-center ">
                     <h1 class="text-h3 font-weight-bold mb-4">New Day, New Skills. Learn, Create, Thrive!</h1>
                     <h2 class="text-subtitle-1 mb-4 text-medium-emphasis">
@@ -63,19 +63,12 @@
                         langsung diterapkan dalam kehidupan sehari-hari! Dari menjahit, berkebun, memasak, 
                         hingga keterampilan lainnya—jadilah lebih mandiri dan kreatif bersama kami.
                     </h2>
-                    <v-btn 
-                        color="#50478A" 
-                        size="large" 
-                        class="mt-2 align-self-start" 
-                        rounded="lg"
-                    >
-                        Get Started!
-                    </v-btn>
+                   
                     </v-col>
                     <v-col cols="12" md="6" class="d-flex justify-center align-center">
                     <img 
                         src="/assets/heropic.png" 
-                        max-height="300" 
+                        height="300" 
                         contain
                         class="mx-auto"
                     ></img>
