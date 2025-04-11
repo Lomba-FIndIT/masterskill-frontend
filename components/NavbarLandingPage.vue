@@ -51,6 +51,7 @@
   const items = [
     {
       text: 'Login',
+      to: '/login',
     },
   ]
 </script>
