@@ -5,7 +5,7 @@
     const discussions = ref([
   {
     id: 1,
-    title: 'Review Alat & Bahan Jahit',
+    title: 'Review Alat & Bahan Jahit (1)',
     author: 'Halima',
     date: 'Senin, 10 Maret 2025',
     comments: 1,
@@ -13,7 +13,7 @@
   },
   {
     id: 2,
-    title: 'Makanan Untuk Berbuka Puasa',
+    title: 'Makanan Untuk Berbuka Puasa(2)',
     author: 'Halima',
     date: 'Senin, 10 Maret 2025',
     comments: 1,
@@ -21,7 +21,7 @@
   },
   {
     id: 3,
-    title: 'Berkebun menanam tanaman hias',
+    title: 'Berkebun menanam tanaman hias (3)',
     author: 'Halima',
     date: 'Senin, 10 Maret 2025',
     comments: 1,
@@ -119,6 +119,7 @@ const filteredDiscussions = computed(() => {
                                 variant="flat" 
                                 block
                                 class="mt-3"
+                                :to="`/akademi/forum/${discussion.id}`"
                             > 
                                 Lihat 
                             </v-btn>

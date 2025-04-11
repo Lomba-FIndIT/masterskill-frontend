@@ -92,6 +92,7 @@
                                         color="#50478A" 
                                         variant="flat" 
                                         rounded="lg"
+                                        :to="`/akademi/course/daftar/${course.id}`"
                                         >
                                         Daftar
                                         </v-btn>
