@@ -1,5 +1,6 @@
 <script setup>
     import { ref } from 'vue'
+    import axios from 'axios';
   
   const topCategories = ref([
     { name: 'Seni Lukis', courses: 28, icon: 'mdi-palette' },
@@ -13,35 +14,53 @@
     { name: 'Desain Digital', courses: 38, icon: 'mdi-photoshop' }
   ])
   
-  const popularCourses = ref([
-    {
-      id: 1,
-      title: 'Nasi Goreng Kimchi',
-      duration: '2h 30m',
-      lessons: 15,
-      price: 'Free',
-      image: new URL('/assets/memasak.jpg', import.meta.url).href,
-      category: 'Memasak'
-    },
-    {
-      id: 2,
-      title: 'Nasi Goreng Kimchi',
-      duration: '2h 30m',
-      lessons: 15,
-      price: 'Free',
-      image: new URL('/assets/memasak.jpg', import.meta.url).href,
-      category: 'Memasak'
-    },
-    {
-      id: 3,
-      title: 'Nasi Goreng Kimchi',
-      duration: '2h 30m',
-      lessons: 15,
-      price: 'Free',
-      image: new URL('/assets/memasak.jpg', import.meta.url).href,
-      category: 'Memasak'
-    },
-  ])
+//   const popularCourses = ref([
+//     {
+//       id: 1,
+//       title: 'Nasi Goreng Kimchi',
+//       duration: '2h 30m',
+//       price: 'Free',
+//       image: new URL('/assets/memasak.jpg', import.meta.url).href,
+//       category: 'Memasak',
+//       rating: '4.5'
+//     },
+//     {
+//       id: 2,
+//       title: 'Nasi Goreng Kimchi',
+//       duration: '2h 30m',
+//       price: 'Free',
+//       image: new URL('/assets/memasak.jpg', import.meta.url).href,
+//       category: 'Memasak',
+//       rating: '4.5'
+//     },
+//     {
+//       id: 3,
+//       title: 'Nasi Goreng Kimchi',
+//       duration: '2h 30m',
+//       price: 'Free',
+//       image: new URL('/assets/memasak.jpg', import.meta.url).href,
+//       category: 'Memasak',
+//       rating: '4.5'
+//     },
+//   ])
+
+const popularCourses = ref([])
+const token = localStorage.getItem('token')
+
+onMounted(async () => {
+  try {
+    const response = await axios.get('https://gastric-jeanna-zidanens-73211838.koyeb.app/api/courses', {
+        headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+        },
+    })
+    popularCourses.value = response.data
+    console.log(popularCourses.value)
+  } catch (error) {
+    console.error('Failed to fetch courses:', error)
+  }
+})
 </script>
 
 <template>
@@ -113,7 +132,7 @@
                             
                             <v-row no-gutters>
                                 <v-col 
-                                    v-for="course in popularCourses" 
+                                    v-for="course in popularCourses.slice(0,3)" 
                                     :key="course.id" 
                                     cols="12" 
                                     md="4"
@@ -131,16 +150,15 @@
                                         cover
                                     ></v-img>
                                     <v-card-title class="pb-1">
-                                        {{ course.title }}
+                                        {{ course.course_name }}
                                     </v-card-title>
                                     
                                     <v-card-subtitle class="d-flex align-center pt-1">
                                         <v-icon size="small" icon="mdi-star" color="warning" class="mr-1"></v-icon>
-                                        <span class="mr-2">4.5</span>
+                                        <span class="mr-2">{{ course.rating }}</span>
                                         <v-icon size="small" icon="mdi-clock" class="mr-1"></v-icon>
                                         <span class="mr-2">{{ course.duration }}</span>
-                                        <v-icon size="small" icon="mdi-account" class="mr-1"></v-icon>
-                                        <span>156 Terdaftar</span>
+                                        
                                     </v-card-subtitle>
                 
                                     <v-spacer></v-spacer>
@@ -151,6 +169,7 @@
                                         color="#50478A" 
                                         variant="flat" 
                                         rounded="lg"
+                                        :to="`/akademi/course/daftar/${course.id}`"
                                         >
                                         Daftar
                                         </v-btn>

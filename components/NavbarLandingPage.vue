@@ -8,6 +8,7 @@
         :active="i === 0"
         link
         :title="item.text"
+        :to="item.to"
       />
     </v-list>
   </v-navigation-drawer>

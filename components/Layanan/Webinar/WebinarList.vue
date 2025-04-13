@@ -6,12 +6,12 @@ const speakers = ref([
   { 
     name: 'Hilman', 
     role: 'Product Manager',
-    image: new URL('/assets/logo.png', import.meta.url).href,
+    image: new URL('/assets/pembicara.jpg', import.meta.url).href,
   },
   { 
     name: 'Hilman', 
     role: 'Product Manager',
-    image: new URL('/assets/logo.png', import.meta.url).href,
+    image: new URL('/assets/pembicara.jpg', import.meta.url).href,
   }
 ])
 
@@ -99,13 +99,15 @@ const events = ref([
             </div>
           </v-card-text>
           
-          <v-btn 
-            color="primary" 
-            variant="flat" 
-            class="registrasi-btn"
-          >
-            Registrasi
-          </v-btn>
+          <router-link :to="`/layanan/webinar/${event.id}`" class="text-decoration-none">
+            <v-btn 
+              color="primary" 
+              variant="flat" 
+              class="registrasi-btn"
+            >
+              Registrasi
+            </v-btn>
+          </router-link>
         </v-card>
       </v-col>
     </v-row>

@@ -8,9 +8,10 @@ export default defineNuxtConfig({
   build: {
     transpile: ['vuetify']
   },
+  modules: ['@pinia/nuxt'],
 
   plugins: [
-    '~/plugins/vuetify.ts' // Pastikan path benar
+    '~/plugins/vuetify.ts', // Pastikan path benar
   ],
 
   app: {

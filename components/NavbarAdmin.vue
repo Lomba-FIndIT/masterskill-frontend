@@ -1,17 +1,12 @@
 <script setup>
-import { ref, computed, shallowRef, onMounted } from 'vue';
+import { ref, shallowRef } from 'vue';
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/userStore'
 
 const userStore = useUserStore()
-
-const drawer = shallowRef(false)
 const router = useRouter()
-const user = computed(() => userStore.user)
-
-onMounted(() => {
-  userStore.fetchUser()
-})
+const drawer = shallowRef(false);
+const akademiMenuOpen = ref(false);
 
 const items = [
   { text: "Dashboard", to: "/dashboard" },
@@ -29,20 +24,19 @@ const items = [
     ] 
    },
   { text: "Lowongan Kerja", to: "/lowongan" },
+  { text: "Add Role", to: "/addRole" },
 ];
 
 const logout = async () => {
   try {
     await userStore.logoutUserFromAPI()
+    // Redirect ke halaman login setelah logout
+    // Misalnya pakai router.push('/login')
     console.log('Logout successful')
     router.push('/')
   } catch (error) {
     console.error('Logout failed:', error)
   }
-}
-
-const goToProfile = () => {
-  router.push('/profile')  // Menambahkan redirect ke halaman profil
 }
 </script>
 
@@ -96,12 +90,11 @@ const goToProfile = () => {
     <template #prepend>
       <v-app-bar-nav-icon v-if="$vuetify.display.smAndDown" @click="drawer = !drawer" class="nav-icon" />
     </template>
-
     <router-link to="/" class="logo-container">
       <img src="/assets/logo.png" alt="Logo" class="logo pl-6" />
     </router-link>
 
-    <v-spacer />
+    <v-spacer></v-spacer>
 
     <!-- Navbar Links (Desktop) -->
     <v-toolbar-items v-if="$vuetify.display.mdAndUp">
@@ -116,7 +109,10 @@ const goToProfile = () => {
         
         <v-menu v-else open-on-hover>
           <template v-slot:activator="{ props }">
-            <v-btn v-bind="props" class="nav-btn text-none mx-2">
+            <v-btn 
+              v-bind="props" 
+              class="nav-btn text-none mx-2"
+            >
               {{ item.text }}
               <v-icon class="ml-1">mdi-chevron-down</v-icon>
             </v-btn>
@@ -130,34 +126,19 @@ const goToProfile = () => {
             >
               <v-list-item-title>{{ sub.text }}</v-list-item-title>
             </v-list-item>
+            
           </v-list>
         </v-menu>
       </template>
-    </v-toolbar-items>
-    <v-menu v-if="user" open-on-hover offset-y>
-      <template #activator="{ props }">
-        <v-btn v-bind="props" class="nav-btn text-none ">
-          {{ user.name }}
-          <v-icon class="ml-1">mdi-chevron-down</v-icon>
+        <v-btn @click="logout" class="nav-btn text-none mx-2">
+            Logout
         </v-btn>
-      </template>
-      <v-list>
-        <v-list-item @click="logout">
-          <v-icon class="mr-2">mdi-logout</v-icon>
-          <v-list-item-title>Logout</v-list-item-title>
-        </v-list-item>
-        <v-list-item @click="goToProfile">
-          <v-icon class="mr-2">mdi-user</v-icon>
-          <v-list-item-title>MyCourse</v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-menu>
-
-
+    </v-toolbar-items>
   </v-app-bar>
 </template>
 
 <style scoped>
+/* Logo Styling */
 .logo-container {
   display: flex;
   align-items: center;
@@ -169,6 +150,8 @@ const goToProfile = () => {
 .logo:hover {
   transform: scale(1.1);
 }
+
+/* Navigation Drawer */
 .custom-drawer {
   border-right: 2px solid #50478A;
 }
@@ -180,10 +163,14 @@ const goToProfile = () => {
   background: #50478A;
   color: white;
 }
+
+/* App Bar */
 .custom-app-bar {
   padding: 0 20px;
   border-bottom: 2px solid #50478A;
 }
+
+/* Navbar Buttons */
 .nav-btn {
   color: #482611;
   font-weight: bold;
@@ -202,13 +189,20 @@ const goToProfile = () => {
   color: white;
   opacity: 1;
 }
+
+/* Dropdown Menu Styling */
 .v-menu__content {
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
+.v-list-item {
+  transition: background-color 0.3s;
+}
 .v-list-item:hover {
   background-color: #50478A20;
 }
+
+/* Logout Button */
 .logout-btn {
   cursor: pointer;
   transition: all 0.3s ease;

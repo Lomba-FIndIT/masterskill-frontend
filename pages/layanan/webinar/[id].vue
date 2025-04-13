@@ -1,7 +1,6 @@
 <script setup>
 import { useRoute } from 'vue-router'
-import CourseDaftar from '~/components/Akademi/CourseDaftar.vue'
-
+import WebinarDaftar from '~/components/Layanan/Webinar/WebinarDaftar.vue'
 
 const route = useRoute()
 const id = route.params.id
@@ -10,7 +9,7 @@ const id = route.params.id
 <template>
   <v-layout>
     <v-main class="d-flex flex-column pt-10">
-      <CourseDaftar :id="id" />
+      <WebinarDaftar :id="id" />
     </v-main>
   </v-layout>
 </template>

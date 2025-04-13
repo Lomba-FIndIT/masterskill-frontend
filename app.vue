@@ -1,9 +1,19 @@
 <script setup>
+import { onMounted } from 'vue'
 import { useRoute } from 'vue-router';
 import NavbarLandingPage from './components/NavbarLandingPage.vue';
 import Navbar from './components/Navbar.vue';
+import NavbarAdmin from './components/NavbarAdmin.vue';
+import Footer from './components/Footer.vue'; // kalau belum diimport
 
-const route = useRoute();
+import { useUserStore } from '@/stores/userStore'
+
+const userStore = useUserStore()
+const route = useRoute()
+
+onMounted(() => {
+  userStore.fetchUser()
+})
 </script>
 
 <template>
@@ -12,7 +22,8 @@ const route = useRoute();
       <NavbarLandingPage />
     </template>
     <template v-else>
-      <Navbar />
+      <NavbarAdmin v-if="userStore.user && userStore.user.role_id === 1" />
+      <Navbar v-else-if="userStore.user && userStore.user.role_id === 4" />
     </template>
 
     <v-main>

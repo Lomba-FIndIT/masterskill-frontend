@@ -9,13 +9,15 @@
             cover
             class="position-relative"
           >
-            <div class="banner-overlay"></div>
-            <v-container class="fill-height">
-              <h1 class="text-white font-weight-bold">Menjahit untuk Pemula</h1>
+            <div class="banner-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5);"></div>
+            <v-container class="fill-height" style="position: absolute; top: 70%; transform: translateY(-50%);">
+              <h1 class="text-white font-weight-bold text-center">{{course?.course_name}}</h1>
             </v-container>
           </v-img>
         </v-col>
       </v-row>
+
+      
   
       <!-- Course Content -->
       <v-row class="mt-4">
@@ -117,9 +119,9 @@
         <v-col cols="12" md="5">
           <v-card elevation="1" class="pa-4">
             <h2 class="text-h6 mb-2">Ringkasan Biaya</h2>
-            <p class="text-caption text-grey">Menjahit • Menjahit untuk Pemula</p>
+            <p class="text-caption text-grey">{{course?.course_name}}</p>
             
-            <h3 class="text-h4 font-weight-bold my-3">Rp. 0</h3>
+            <h3 class="text-h4 font-weight-bold my-3">{{ course ? (course.price > 0 ? `Rp. ${course.price}` : 'Gratis') : '-' }}</h3>
             
             <v-btn
               block
@@ -147,36 +149,59 @@
         </v-col>
       </v-row>
     </v-container>
-  </template>
+</template>
   
-  <script setup>
-  const courseRating = 4;
+<script setup>
+import { onMounted, ref } from 'vue'
+import { useRoute } from 'vue-router'
+import axios from 'axios'
+
+const route = useRoute()
+const course = ref(null)
+
+const courseRating = 4;
+
+const ratings = [
+  { stars: 5, value: 70 },
+  { stars: 4, value: 20 },
+  { stars: 3, value: 5 },
+  { stars: 2, value: 3 },
+  { stars: 1, value: 2 },
+];
+
+const reviews = [
+  {
+    name: "Lina",
+    rating: 4,
+    time: "3 Month",
+    text: "Kursus ini sangat membantu! Penjelasan mudah dipahami, cocok buat yang belum pernah pegang mesin jahit."
+  },
+  {
+    name: "Loni",
+    rating: 4,
+    time: "3 Month",
+    text: "Instrukturnya sangat jelas dalam menjelaskan teknik-teknik menjahit. Saya yang belum pernah menjahit sebelumnya sekarang sudah bisa bikin baju sederhana!"
+  }
+];
+const token = localStorage.getItem('token')
+onMounted(async () => {
+  try {
+    const response = await axios.get(`https://gastric-jeanna-zidanens-73211838.koyeb.app/api/courses/${route.params.id}`,
+      {headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+        },
+  })
+    course.value = response.data
+    console.log(course.value)
+  } catch (error) {
+    console.error('Gagal mengambil data course:', error)
+  }
+})
+</script>
+
   
-  const ratings = [
-    { stars: 5, value: 70 },
-    { stars: 4, value: 20 },
-    { stars: 3, value: 5 },
-    { stars: 2, value: 3 },
-    { stars: 1, value: 2 },
-  ];
-  
-  const reviews = [
-    {
-      name: "Lina",
-      rating: 4,
-      time: "3 Month",
-      text: "Kursus ini sangat membantu! Penjelasan mudah dipahami, cocok buat yang belum pernah pegang mesin jahit."
-    },
-    {
-      name: "Loni",
-      rating: 4,
-      time: "3 Month", 
-      text: "Instrukturnya sangat jelas dalam menjelaskan teknik-teknik menjahit. Saya yang belum pernah menjahit sebelumnya sekarang sudah bisa bikin baju sederhana!"
-    }
-  ];
-  </script>
-  
-  <style scoped>
+<style scoped>
   .banner-overlay {
     position: absolute;
     top: 0;
@@ -185,4 +210,4 @@
     height: 100%;
     background: rgba(0,0,0,0.4);
   }
-  </style>
+</style>

@@ -1,5 +1,20 @@
 <script setup>
   import { ref } from 'vue'
+  import { useUserStore } from '@/stores/userStore'
+  import { useRouter } from 'vue-router';
+  import axios from 'axios';
+  const userStore = useUserStore()
+  const router = useRouter();
+
+  onMounted(() => {
+  // Cek kalau udah ada token + user, langsung alihin
+  if (localStorage.getItem('token')) {
+    // console.log(userStore.fetchUser())
+    userStore.fetchUser()
+    router.push('/dashboard')
+  
+  }
+})
   
   const topCategories = ref([
     { name: 'Seni Lukis', courses: 28, icon: 'mdi-palette' },
@@ -13,50 +28,41 @@
     { name: 'Desain Digital', courses: 38, icon: 'mdi-photoshop' }
   ])
   
-  const popularCourses = ref([
-    {
-      id: 1,
-      title: 'Nasi Goreng Kimchi',
-      duration: '2h 30m',
-      lessons: 15,
-      price: 'Free',
-      image: new URL('/assets/memasak.jpg', import.meta.url).href,
-      category: 'Memasak'
-    },
-    {
-      id: 2,
-      title: 'Nasi Goreng Kimchi',
-      duration: '2h 30m',
-      lessons: 15,
-      price: 'Free',
-      image: new URL('/assets/memasak.jpg', import.meta.url).href,
-      category: 'Memasak'
-    },
-    {
-      id: 3,
-      title: 'Nasi Goreng Kimchi',
-      duration: '2h 30m',
-      lessons: 15,
-      price: 'Free',
-      image: new URL('/assets/memasak.jpg', import.meta.url).href,
-      category: 'Memasak'
-    },
-  ])
+  const popularCourses = ref([])
+  const token = localStorage.getItem('token')
+  onMounted(async () => {
+  try {
+    const response = await axios.get('https://gastric-jeanna-zidanens-73211838.koyeb.app/api/courses', {
+        headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+        },
+    })
+    popularCourses.value = response.data
+    console.log(popularCourses.value)
+  } catch (error) {
+    console.error('Failed to fetch courses:', error)
+  }
+})
 
   const discussions = ref([
   { author: 'Halima', date: 'Senin, 10 Maret 2025', title: 'Makanan Untuk Berbuka Puasa', replies: 1, members: 3 },
   { author: 'Halima', date: 'Senin, 10 Maret 2025', title: 'Makanan Untuk Berbuka Puasa', replies: 1, members: 3 },
   { author: 'Halima', date: 'Senin, 10 Maret 2025', title: 'Makanan Untuk Berbuka Puasa', replies: 1, members: 3 }
 ]);
+
+const goToLogin = () => {
+  // misalnya bisa validasi dulu sebelum redirect
+  router.push('/login')
+}
 </script>
 
 <template>
     <v-app>
         <v-main class="gradient-background">
-            <v-container fluid>
-                <!-- Header Section -->
-                <v-row no-gutters class="mb-6 pl-10">
-                    <v-col cols="12" md="6" class="d-flex flex-column justify-center ">
+            <v-container  >
+                <v-row no-gutters class="mb-6 pl-4 ">
+                    <v-col cols="12"  md="6" class="d-flex flex-column justify-center ">
                     <h1 class="text-h3 font-weight-bold mb-4">New Day, New Skills. Learn, Create, Thrive!</h1>
                     <h2 class="text-subtitle-1 mb-4 text-medium-emphasis">
                         Belajar keterampilan praktis yang bisa 
@@ -68,6 +74,7 @@
                         size="large" 
                         class="mt-2 align-self-start" 
                         rounded="lg"
+                        @click="goToLogin"
                     >
                         Get Started!
                     </v-btn>
@@ -91,7 +98,7 @@
                                     <h2 class="text-h5 font-weight-bold">Top Category</h2>
                                 </v-col>
                                 <v-col cols="6" class="text-right">
-                                    <v-btn variant="outlined" rounded="xl" border="true" color="#50478A">See All</v-btn>
+                                    <v-btn variant="outlined" rounded="xl" border="true" color="#50478A" @click="goToLogin">See All</v-btn>
                                 </v-col>
                             </v-row>
                             
@@ -136,7 +143,7 @@
                                     <h2 class="text-h5 font-weight-bold">Popular Courses</h2>
                                 </v-col>
                                 <v-col cols="6" class="text-right">
-                                    <v-btn variant="outlined" rounded="xl" border="true" color="#50478A">See All</v-btn>
+                                    <v-btn variant="outlined" rounded="xl" border="true" color="#50478A" @click="goToLogin">See All</v-btn>
                                 </v-col>
                             </v-row>
                             
@@ -160,16 +167,14 @@
                                         cover
                                     ></v-img>
                                     <v-card-title class="pb-1">
-                                        {{ course.title }}
+                                        {{ course.course_name }}
                                     </v-card-title>
                                     
                                     <v-card-subtitle class="d-flex align-center pt-1">
-                                        <v-icon size="small" icon="mdi-star" color="warning" class="mr-1"></v-icon>
-                                        <span class="mr-2">4.5</span>
                                         <v-icon size="small" icon="mdi-clock" class="mr-1"></v-icon>
                                         <span class="mr-2">{{ course.duration }}</span>
-                                        <v-icon size="small" icon="mdi-account" class="mr-1"></v-icon>
-                                        <span>156 Terdaftar</span>
+                                        
+                                       
                                     </v-card-subtitle>
                 
                                     <v-spacer></v-spacer>
@@ -180,6 +185,7 @@
                                         color="#50478A" 
                                         variant="flat" 
                                         rounded="lg"
+                                        @click="goToLogin"
                                         >
                                         Daftar
                                         </v-btn>
@@ -212,7 +218,7 @@
                                 <li>✅ Optimasi ATS-Friendly – Pastikan CV-mu lolos seleksi awal</li>
                                 <li>✅ Meningkatkan Kesempatan – Buat CV yang standout di mata recruiter</li>
                             </ul>
-                            <v-btn color="#50478A" class="mt-3">Daftar Sekarang</v-btn>
+                            <v-btn color="#50478A" class="mt-3" @click="goToLogin">Daftar Sekarang</v-btn>
                             </v-col>
                             
                         </v-row>
@@ -230,7 +236,7 @@
                                     <h2 class="text-h5 font-weight-bold">Popular Courses</h2>
                                 </v-col>
                                 <v-col cols="6" class="text-right">
-                                    <v-btn variant="outlined" rounded="xl" border="true" color="#50478A">See All</v-btn>
+                                    <v-btn variant="outlined" rounded="xl" border="true" color="#50478A" @click="goToLogin">See All</v-btn>
                                 </v-col>
                             </v-row>
                     <v-row>
@@ -264,6 +270,7 @@
                                 variant="flat" 
                                 block
                                 class="mt-3"
+                                @click="goToLogin"
                             > 
                                 Lihat 
                             </v-btn>
@@ -281,7 +288,7 @@
                             <v-col cols="12" md="6">
                             <h2 class="text-h3 font-weight-bold">Kesempatan Baru, Karier Baru!</h2>
                             <p class="text-body-2">Jelajahi lowongan pekerjaan terbaru dan wujudkan karier impianmu hari ini!</p>
-                            <v-btn color="#50478A" class="mt-3">Lamar Sekarang</v-btn>
+                            <v-btn color="#50478A" class="mt-3" @click="goToLogin">Lamar Sekarang</v-btn>
                             </v-col>
                             <v-col cols="12" md="6" class=" text-right">
                             <img src="/assets/job-opportunity.png" height="250" contain></img>

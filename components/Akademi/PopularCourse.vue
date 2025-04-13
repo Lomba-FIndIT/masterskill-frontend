@@ -1,42 +1,22 @@
 <script setup>
-    const popularCourses = ref([
-    {
-      id: 1,
-      title: 'Nasi Goreng Kimchi',
-      duration: '2h 30m',
-      lessons: 15,
-      price: 'Free',
-      image: new URL('/assets/memasak.jpg', import.meta.url).href,
-      category: 'Memasak'
-    },
-    {
-      id: 2,
-      title: 'Nasi Goreng Kimchi',
-      duration: '2h 30m',
-      lessons: 15,
-      price: 'Free',
-      image: new URL('/assets/memasak.jpg', import.meta.url).href,
-      category: 'Memasak'
-    },
-    {
-      id: 3,
-      title: 'Nasi Goreng Kimchi',
-      duration: '2h 30m',
-      lessons: 15,
-      price: 'Free',
-      image: new URL('/assets/memasak.jpg', import.meta.url).href,
-      category: 'Memasak'
-    },
-    {
-      id: 4,
-      title: 'Nasi Goreng Kimchi',
-      duration: '2h 30m',
-      lessons: 15,
-      price: 'Free',
-      image: new URL('/assets/memasak.jpg', import.meta.url).href,
-      category: 'Memasak'
-    },
-  ])
+    import axios from 'axios';
+    const popularCourses = ref([])
+    const token = localStorage.getItem('token')
+
+    onMounted(async () => {
+    try {
+        const response = await axios.get('https://gastric-jeanna-zidanens-73211838.koyeb.app/api/courses', {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        })
+        popularCourses.value = response.data
+        console.log(popularCourses.value)
+    } catch (error) {
+        console.error('Failed to fetch courses:', error)
+    }
+    })
 </script>
 <template>
     <v-app>
@@ -47,7 +27,7 @@
                         <v-col cols="12">
                             <v-row no-gutters class="mb-4 align-center">
                                 <v-col cols="6">
-                                    <h2 class="text-h5 font-weight-bold">Popular Courses</h2>
+                                    <h2 class="text-h5 font-weight-bold">All Courses</h2>
                                 </v-col>
                                 
                             </v-row>
@@ -72,7 +52,7 @@
                                         cover
                                     ></v-img>
                                     <v-card-title class="pb-1">
-                                        {{ course.title }}
+                                        {{ course.course_name }}
                                     </v-card-title>
                                     
                                     <v-card-subtitle class="d-flex align-center pt-1">
