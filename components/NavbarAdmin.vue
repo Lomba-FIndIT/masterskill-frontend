@@ -33,6 +33,7 @@ const logout = async () => {
     // Redirect ke halaman login setelah logout
     // Misalnya pakai router.push('/login')
     console.log('Logout successful')
+    localStorage.removeItem('token')
     router.push('/')
   } catch (error) {
     console.error('Logout failed:', error)

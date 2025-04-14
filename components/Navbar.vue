@@ -35,6 +35,7 @@ const logout = async () => {
   try {
     await userStore.logoutUserFromAPI()
     console.log('Logout successful')
+    localStorage.removeItem('token')
     router.push('/')
   } catch (error) {
     console.error('Logout failed:', error)

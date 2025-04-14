@@ -128,6 +128,7 @@
               color="indigo"
               class="text-white mb-6"
               height="48"
+              @click="joinCourse"
             >
               Bayar Sekarang
             </v-btn>
@@ -198,6 +199,26 @@ onMounted(async () => {
     console.error('Gagal mengambil data course:', error)
   }
 })
+
+const joinCourse = async () => {
+  try {
+    const response = await axios.get(
+      `https://gastric-jeanna-zidanens-73211838.koyeb.app/api/courses/${route.params.id}/join`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    )
+    console.log('Berhasil join course:', response.data)
+    // Redirect atau tampilkan notifikasi sukses
+    alert('Berhasil bergabung ke kursus!')
+  } catch (error) {
+    console.error('Gagal join course:', error)
+    alert('Gagal bergabung ke kursus.')
+  }
+}
 </script>
 
   

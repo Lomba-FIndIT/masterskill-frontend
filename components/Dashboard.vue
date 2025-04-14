@@ -2,6 +2,10 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router';
 import axios from 'axios';
+import { useUserStore } from '@/stores/userStore'
+
+const userStore = useUserStore()
+
 
 const router = useRouter();
 
@@ -39,6 +43,17 @@ const discussions = ref([
     { id: 2,author: 'Halima', date: 'Senin, 10 Maret 2025', title: 'Makanan Untuk Berbuka Puasa', replies: 1, members: 3 },
     { id: 3,author: 'Halima', date: 'Senin, 10 Maret 2025', title: 'Makanan Untuk Berbuka Puasa', replies: 1, members: 3 }
 ]);
+
+const logout = async () => {
+  try {
+    await userStore.logoutUserFromAPI()
+    console.log('Logout successful')
+    localStorage.removeItem('token')
+    router.push('/')
+  } catch (error) {
+    console.error('Logout failed:', error)
+  }
+}
 </script>
 
 <template>
@@ -56,9 +71,9 @@ const discussions = ref([
                                 Dari menjahit, berkebun, memasak, hingga keterampilan lainnya—jadilah lebih mandiri dan
                                 kreatif bersama kami.
                             </h2>
-                            <!-- <v-btn size="large" color="#50478A" elevation="4" class="px-6 py-3" rounded="pill">
+                            <!-- <v-btn size="large" color="#50478A" elevation="4" class="px-6 py-3" rounded="pill" @click="logout">
                                 <v-icon left>mdi-rocket-launch</v-icon>
-                                Mulai Sekarang
+                                logout
                             </v-btn> -->
                         </div>
                     </v-col>
@@ -336,13 +351,10 @@ const discussions = ref([
                                             karier impianmu hari ini!</p>
                                         <div class="d-flex">
                                             <v-btn color="#50478A" size="large" class="mr-4" rounded="pill"
-                                                elevation="3" prepend-icon="mdi-briefcase">
-                                                Lamar Sekarang
-                                            </v-btn>
-                                            <v-btn variant="outlined" color="#50478A" size="large" rounded="pill"
-                                                prepend-icon="mdi-magnify">
+                                                elevation="3" prepend-icon="mdi-magnify" @click="$router.push('/lowongan')">
                                                 Lihat Lowongan
                                             </v-btn>
+                                
                                         </div>
                                     </v-col>
                                     <v-col cols="12" md="5" class="text-center">

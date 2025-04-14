@@ -30,20 +30,20 @@
   
   const popularCourses = ref([])
   const token = localStorage.getItem('token')
-  onMounted(async () => {
-  try {
-    const response = await axios.get('https://gastric-jeanna-zidanens-73211838.koyeb.app/api/courses', {
-        headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-        },
-    })
-    popularCourses.value = response.data
-    console.log(popularCourses.value)
-  } catch (error) {
-    console.error('Failed to fetch courses:', error)
-  }
-})
+//   onMounted(async () => {
+//   try {
+//     const response = await axios.get('https://gastric-jeanna-zidanens-73211838.koyeb.app/api/courses', {
+//         headers: {
+//             Authorization: `Bearer ${token}`,
+//             'Content-Type': 'application/json',
+//         },
+//     })
+//     popularCourses.value = response.data
+//     console.log(popularCourses.value)
+//   } catch (error) {
+//     console.error('Failed to fetch courses:', error)
+//   }
+// })
 
   const discussions = ref([
   { author: 'Halima', date: 'Senin, 10 Maret 2025', title: 'Makanan Untuk Berbuka Puasa', replies: 1, members: 3 },

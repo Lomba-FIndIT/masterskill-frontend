@@ -145,7 +145,7 @@ onMounted(async () => {
                                     >
                                     <div class="category-badge">{{ course.category }}</div>
                                     <v-img 
-                                        :src="course.image" 
+                                        :src="course.img_url" 
                                         height="200" 
                                         cover
                                     ></v-img>
@@ -155,9 +155,9 @@ onMounted(async () => {
                                     
                                     <v-card-subtitle class="d-flex align-center pt-1">
                                         <v-icon size="small" icon="mdi-star" color="warning" class="mr-1"></v-icon>
-                                        <span class="mr-2">{{ course.rating }}</span>
+                                        <span class="mr-2">{{ course.ratings }}</span>
                                         <v-icon size="small" icon="mdi-clock" class="mr-1"></v-icon>
-                                        <span class="mr-2">{{ course.duration }}</span>
+                                        <span class="mr-2">{{ course.total_duration }}</span>
                                         
                                     </v-card-subtitle>
                 

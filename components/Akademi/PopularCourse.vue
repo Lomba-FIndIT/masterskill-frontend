@@ -47,7 +47,7 @@
                                     >
                                     <div class="category-badge">{{ course.category }}</div>
                                     <v-img 
-                                        :src="course.image" 
+                                        :src="course.img_url" 
                                         height="200" 
                                         cover
                                     ></v-img>
@@ -57,11 +57,10 @@
                                     
                                     <v-card-subtitle class="d-flex align-center pt-1">
                                         <v-icon size="small" icon="mdi-star" color="warning" class="mr-1"></v-icon>
-                                        <span class="mr-2">4.5</span>
+                                        <span class="mr-2">{{ course.ratings }}</span>
                                         <v-icon size="small" icon="mdi-clock" class="mr-1"></v-icon>
-                                        <span class="mr-2">{{ course.duration }}</span>
-                                        <v-icon size="small" icon="mdi-account" class="mr-1"></v-icon>
-                                        <span>156 Terdaftar</span>
+                                        <span class="mr-2">{{ course.total_duration }}</span>
+                                        
                                     </v-card-subtitle>
                 
                                     <v-spacer></v-spacer>

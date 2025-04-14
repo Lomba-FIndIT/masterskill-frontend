@@ -23,7 +23,9 @@
         logo: new URL('/assets/logo.png', import.meta.url).href,
         location: 'Bogor, Jawa Barat',
         experience: '3 Tahun+',
-        workHours: '5jt - 8jt'
+        workHours: '5jt - 8jt',
+        email: 'admin@example.com',
+        subject: 'Lamaran Pekerjaan'
     },
     {   
         jobId: 2,
@@ -32,7 +34,9 @@
         logo: new URL('/assets/logo.png', import.meta.url).href,
         location: 'Bogor, Jawa Barat',
         experience: '3 Tahun+',
-        workHours: '5jt - 8jt'
+        workHours: '5jt - 8jt',
+        email: 'admin@example.com',
+        subject: 'Lamaran Pekerjaan'
     },
     {   
         jobId: 3,
@@ -41,7 +45,9 @@
         logo: new URL('/assets/logo.png', import.meta.url).href,
         location: 'Bogor, Jawa Barat',
         experience: '3 Tahun+',
-        workHours: '5jt - 8jt'
+        workHours: '5jt - 8jt',
+        email: 'admin@example.com',
+        subject: 'Lamaran Pekerjaan'
     },
     ])
 
@@ -260,6 +266,7 @@
                             color="#50478A" 
                             variant="flat" 
                             class="text-none"
+                            :href="`mailto:${job.email}?subject=${encodeURIComponent(job.subject)}`"
                             >
                             Lamar
                             </v-btn>
