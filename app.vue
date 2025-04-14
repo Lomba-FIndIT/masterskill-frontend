@@ -16,7 +16,13 @@ const token = localStorage.getItem('token')
 
 if (token) {
   userStore.setToken(token)
-  await userStore.fetchUser()
+  try{
+      await userStore.fetchUser()
+  }catch{
+    localStorage.removeItem('token')
+    router.push('/')
+  }
+  
 }else{
   router.push('/')
 }
