@@ -1,66 +1,84 @@
 <script setup>
-    import { computed, ref, shallowRef, watch } from 'vue'
-    import { useDisplay } from 'vuetify'
-  
-    const display = useDisplay()
-    const mobileTarget = ref()
-    const desktopTarget = ref()
-    const filterMobileTarget = ref()
-    const drawer = shallowRef(false)
-    const filterDrawer = shallowRef(false)
-    const tab = ref()
-  
-    watch(display.mobile, val => {
-      if (!val) drawer.value = false
-    })
+import { computed, ref, shallowRef, watch, onMounted } from 'vue'
+import { useDisplay } from 'vuetify'
+import axios from 'axios'
 
+const display = useDisplay()
+const desktopTarget = ref()
+const filterMobileTarget = ref()
+const drawer = shallowRef(false)
+const filterDrawer = shallowRef(false)
+const tab = ref()
+const jobListings = ref([])
+const token = localStorage.getItem('token')
+const selectedCategories = ref([])
+const selectedSalaries = ref([])
+const selectedExperiences = ref([])
+const searchQuery = ref("");
 
-    const jobListings = ref([
-    {   
-        jobId: 1,
-        company: 'PT. Fashionlytic',
-        jobTitle: 'Penjahit Konveksi',
-        logo: new URL('/assets/logo.png', import.meta.url).href,
-        location: 'Bogor, Jawa Barat',
-        experience: '3 Tahun+',
-        workHours: '5jt - 8jt',
-        email: 'admin@example.com',
-        subject: 'Lamaran Pekerjaan'
-    },
-    {   
-        jobId: 2,
-        company: 'PT. Fashionlytic',
-        jobTitle: 'Penjahit Konveksi',
-        logo: new URL('/assets/logo.png', import.meta.url).href,
-        location: 'Bogor, Jawa Barat',
-        experience: '3 Tahun+',
-        workHours: '5jt - 8jt',
-        email: 'admin@example.com',
-        subject: 'Lamaran Pekerjaan'
-    },
-    {   
-        jobId: 3,
-        company: 'PT. Fashionlytic',
-        jobTitle: 'Penyulam Konveksi',
-        logo: new URL('/assets/logo.png', import.meta.url).href,
-        location: 'Bogor, Jawa Barat',
-        experience: '3 Tahun+',
-        workHours: '5jt - 8jt',
-        email: 'admin@example.com',
-        subject: 'Lamaran Pekerjaan'
-    },
+// Refs untuk filter dinamis
+const categories = ref([])
+const salaries = ref([])
+const experiences = ref([])
+
+watch(display.mobile, val => {
+  if (!val) drawer.value = false
+})
+
+onMounted(async () => {
+  try {
+    const [jobsRes, categoriesRes, salariesRes, experiencesRes] = await Promise.all([
+      axios.get('https://gastric-jeanna-zidanens-73211838.koyeb.app/api/works', {
+        headers: { Authorization: `Bearer ${token}` }
+      }),
+      axios.get('https://gastric-jeanna-zidanens-73211838.koyeb.app/api/categories', {
+        headers: { Authorization: `Bearer ${token}` }
+      }),
+      axios.get('https://gastric-jeanna-zidanens-73211838.koyeb.app/api/salaries', {
+        headers: { Authorization: `Bearer ${token}` }
+      }),
+      axios.get('https://gastric-jeanna-zidanens-73211838.koyeb.app/api/experiences', {
+        headers: { Authorization: `Bearer ${token}` }
+      })
     ])
 
-    const searchQuery = ref("");
+    jobListings.value = jobsRes.data
+    categories.value = categoriesRes.data
+    salaries.value = salariesRes.data
+    experiences.value = experiencesRes.data
+    console.log(salaries)
+  } catch (error) {
+    console.error('Failed to fetch data:', error)
+  }
+})
 
-    const filteredJobs = computed(() => {
-    if (!searchQuery.value) return jobListings.value;
-    return jobListings.value.filter((job) =>
-        job.company.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-        job.jobTitle.toLowerCase().includes(searchQuery.value.toLowerCase()) // Mencari di judul pekerjaan
-    );
-    });
+const filteredJobs = computed(() => {
+  return jobListings.value.filter((job) => {
+    const matchesSearch =
+      !searchQuery.value ||
+      job.company_name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      job.job_description.toLowerCase().includes(searchQuery.value.toLowerCase())
+
+    const matchesCategory =
+      selectedCategories.value.length === 0 ||
+      selectedCategories.value.includes(job.category)
+
+    const matchesExperience =
+      selectedExperiences.value.length === 0 ||
+      selectedExperiences.value.includes(job.experience)
+
+    const matchesSalary =
+      selectedSalaries.value.length === 0 ||
+      selectedSalaries.value.some((range) => {
+        return job.min_salary >= range.min && job.max_salary <= range.max
+      })
+
+    return matchesSearch && matchesCategory && matchesExperience && matchesSalary
+  })
+})
+
 </script>
+
 
 <template>
     <v-layout>
@@ -123,17 +141,18 @@
                 >
                   <v-expansion-panel :ripple="false">
                     <v-expansion-panel-title class="px-2">
-                      <div class="text-body-2 text-high-emphasis">Tipe Pekerjaan</div>
+                      <div class="text-body-2 text-high-emphasis">Salary</div>
                     </v-expansion-panel-title>
-  
                     <v-expansion-panel-text>
                       <div class="ms-n4">
                         <v-checkbox-btn
-                          v-for="(tipePekerjaan, i) in ['Full-Time', 'Internship', 'Part-Time', 'Freelance']"
+                          v-for="(salary, i) in salaries"
                           :key="i"
+                          v-model="selectedSalaries"
+                          :value="salary"
                           color="primary"
                           density="comfortable"
-                          :label="tipePekerjaan"
+                          :label="`Rp ${salary.min.toLocaleString()} - Rp ${salary.max.toLocaleString()}`"
                         />
                       </div>
                     </v-expansion-panel-text>
@@ -150,11 +169,13 @@
                     <v-expansion-panel-text>
                       <div class="ms-n4">
                         <v-checkbox-btn
-                          v-for="(category, i) in ['Tekstil & Fashion', 'Kuliner & Food Business', 'Kerajinan dari Kayu & Bambu', 'Fotografi']"
+                          v-for="(category, i) in categories"
                           :key="i"
+                          v-model="selectedCategories"
+                          :value="category.category_name"
                           color="primary"
                           density="comfortable"
-                          :label="category"
+                          :label="category.category_name"
                         />
                       </div>
                     </v-expansion-panel-text>
@@ -170,11 +191,13 @@
                     <v-expansion-panel-text>
                       <div class="ms-n4">
                         <v-checkbox-btn
-                          v-for="(pengalaman, i) in ['Kurang dari 1 tahun', '1 - 3 Tahun', '3 - 5 Tahun', '5 - 10 Tahun', 'Lebih dari 10 Tahun']"
+                          v-for="(exp, i) in experiences"
                           :key="i"
+                          v-model="selectedExperiences"
+                          :value="exp.experience"
                           color="primary"
                           density="comfortable"
-                          :label="pengalaman"
+                          :label="exp.experience"
                         />
                       </div>
                     </v-expansion-panel-text>
@@ -206,10 +229,10 @@
                             ></v-img>
                             <div>
                             <h3 class="text-subtitle-1 font-weight-bold">
-                                {{ job.jobTitle }}
+                                {{ job.job_description }}
                             </h3>
                             <p class="text-caption text-medium-emphasis">
-                                {{ job.company }}
+                                {{ job.company_name }}
                             </p>
                             </div>
                             <v-spacer></v-spacer>
@@ -231,7 +254,7 @@
                                 class="mr-2"
                             ></v-icon>
                             <span class="text-body-2">
-                                {{ job.location }}
+                                {{ job.company_address }}
                             </span>
                             </div>
 
@@ -254,7 +277,7 @@
                                 class="mr-2"
                                 ></v-icon>
                                 <span class="text-body-2">
-                                {{ job.workHours }}
+                                {{ job.min_salary }} - {{ job.max_salary }}
                                 </span>
                             </div>
                             </div>
@@ -266,7 +289,7 @@
                             color="#50478A" 
                             variant="flat" 
                             class="text-none"
-                            :href="`mailto:${job.email}?subject=${encodeURIComponent(job.subject)}`"
+                            :href="`mailto:${job.hrd_email}?subject=${encodeURIComponent()}`"
                             >
                             Lamar
                             </v-btn>

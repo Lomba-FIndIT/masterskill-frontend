@@ -18,7 +18,7 @@ if (token) {
   userStore.setToken(token)
   await userStore.fetchUser()
 }else{
-  router.push('/login')
+  router.push('/')
 }
 
 const user = computed(() => userStore.user)

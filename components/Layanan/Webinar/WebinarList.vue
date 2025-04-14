@@ -1,38 +1,92 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import axios from 'axios'
 
-// Speaker data
-const speakers = ref([
-  { 
-    name: 'Hilman', 
-    role: 'Product Manager',
-    image: new URL('/assets/pembicara.jpg', import.meta.url).href,
-  },
-  { 
-    name: 'Hilman', 
-    role: 'Product Manager',
-    image: new URL('/assets/pembicara.jpg', import.meta.url).href,
+const token = localStorage.getItem('token')
+
+// Refs
+const speakers = ref([])
+const events = ref([])
+
+const toIsoFormat = (dateStr) => {
+  if (!dateStr || typeof dateStr !== 'string') return ''
+  return dateStr.replace(' ', 'T')
+}
+
+const formatDate = (dateStr) => {
+  const iso = toIsoFormat(dateStr)
+  if (!iso) return 'Tanggal tidak valid'
+  const date = new Date(iso)
+  const options = { day: 'numeric', month: 'long', year: 'numeric' }
+  return date.toLocaleDateString('id-ID', options)
+}
+
+const formatTimeRange = (start, end) => {
+  const format = (dateStr) => {
+    const iso = toIsoFormat(dateStr)
+    if (!iso) return '--:--'
+    return new Date(iso).toLocaleTimeString('id-ID', {
+      hour: '2-digit',
+      minute: '2-digit',
+    })
   }
-])
+  return `${format(start)} - ${format(end)}`
+}
 
-// Event schedule data
-const events = ref([
-  {
-    id: 1,
-    date: '15 February 2024',
-    title: 'Menjahit dari Nol: Peluang, Tren, dan Cara Memulai',
-    time: '9:15am - 2:15pm',
-    location: 'Zoom Meeting',
-  },
-  {
-    id: 2,
-    date: '16 February 2024',
-    title: 'Menjahit dari satu: Peluang, Tren, dan Cara Memulai',
-    time: '9:15am - 2:15pm',
-    location: 'Zoom Meeting',
-  },
-])
+
+// Fetch speakers
+const fetchSpeakers = async () => {
+  try {
+    const response = await axios.get(`https://gastric-jeanna-zidanens-73211838.koyeb.app/api/speakers`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    })
+    speakers.value = response.data.map(speaker => ({
+      name: speaker.speaker_name,
+      role: speaker.speaker_title,
+      image: speaker.image || ' ', // Asumsikan ini sudah URL lengkap
+    }))
+  } catch (error) {
+    console.error('Error fetching speakers:', error)
+  }
+}
+
+// Fetch events
+const fetchEvents = async () => {
+  try {
+    const response = await axios.get(`https://gastric-jeanna-zidanens-73211838.koyeb.app/api/webinars`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    })
+    events.value = response.data.map(event => {
+    console.log('Raw Event:', event)
+    return {
+      id: event.id,
+      title: event.title,
+      dateStr: formatDate(event.start_date),
+      dateParts: formatDate(event.start_date).split(' '),
+      time: formatTimeRange(event.start_date, event.end_date),
+      location: 'Zoom Meeting',
+    }
+  })
+
+  } catch (error) {
+    console.error('Error fetching events:', error)
+  }
+}
+
+// Fetch on mount
+onMounted(() => {
+  fetchSpeakers()
+  fetchEvents()
+})
 </script>
+
+
 
 <template>
   <v-container class="pt-15">
@@ -72,8 +126,8 @@ const events = ref([
           variant="outlined"
         >
           <div class="event-date d-flex flex-column align-center justify-center mr-4">
-            <div class="text-h5 font-weight-bold">{{ event.date.split(' ')[0] }}</div>
-            <div class="text-caption">{{ event.date.split(' ').slice(1).join(' ') }}</div>
+            <div class="text-h5 font-weight-bold">{{ event.dateParts[0] }}</div>
+            <div class="text-caption">{{ event.dateParts.slice(1).join(' ') }}</div>
           </div>
           
           <v-card-text class="flex-grow-1 pa-0">

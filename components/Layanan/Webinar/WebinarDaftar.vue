@@ -1,9 +1,8 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-defineProps({
-  id: String
-})
+import axios from 'axios'
+
 const route = useRoute()
 const webinarId = route.params.id
 
@@ -14,22 +13,42 @@ const form = ref({
 })
 
 const submitted = ref(false)
+const webinarTitle = ref('') // simpan judul webinar
+const token = localStorage.getItem('token')
+
+const fetchWebinar = async () => {
+  try {
+    const res = await axios.get(`https://gastric-jeanna-zidanens-73211838.koyeb.app/api/webinars/${webinarId}`,{
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    })
+    webinarTitle.value = res.data.title || 'Webinar Tidak Ditemukan'
+  } catch (error) {
+    console.error('Gagal mengambil data webinar:', error)
+    webinarTitle.value = 'Webinar Tidak Ditemukan'
+  }
+}
 
 const submitForm = () => {
-  // Simulasi submit form (kamu bisa integrasi API di sini)
   console.log('Registering for webinar ID:', webinarId)
   console.log('Form Data:', form.value)
-
   submitted.value = true
 }
+
+onMounted(() => {
+  fetchWebinar()
+})
 </script>
+
 
 <template>
   <v-container class="pt-10">
     <v-row justify="center">
       <v-col cols="12" md="6">
         <v-card elevation="2" class="pa-6">
-          <h2 class="text-h5 font-weight-bold mb-4">Pendaftaran Webinar #{{ webinarId }}</h2>
+          <h2 class="text-h5 font-weight-bold mb-4">Pendaftaran Webinar {{ webinarTitle }}</h2>
 
           <v-form @submit.prevent="submitForm" v-if="!submitted">
             <v-text-field

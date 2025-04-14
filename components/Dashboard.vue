@@ -9,29 +9,64 @@ const userStore = useUserStore()
 
 const router = useRouter();
 
-const topCategories = ref([
-    { name: 'Seni Lukis', courses: 28, icon: 'mdi-palette' },
-    { name: 'Menjahit', courses: 38, icon: 'mdi-scissors-cutting' },
-    { name: 'Photography', courses: 38, icon: 'mdi-camera' },
-    { name: 'Photography', courses: 38, icon: 'mdi-camera' },
-    { name: 'Memasak', courses: 38, icon: 'mdi-chef-hat' },
-    { name: 'Desain Digital', courses: 38, icon: 'mdi-photoshop' },
-    { name: 'Desain Digital', courses: 38, icon: 'mdi-photoshop' },
-    { name: 'Desain Digital', courses: 38, icon: 'mdi-photoshop' }
-])
-
+const topCategories = ref([])
+const categoryIcons = {
+        'Technology': 'mdi-laptop',
+        'Design': 'mdi-palette',
+        'Business': 'mdi-briefcase',
+        'Marketing': 'mdi-bullhorn',
+        'Photography': 'mdi-camera',
+        'Music': 'mdi-music',
+        'Health': 'mdi-heart-pulse',
+        'Cooking': 'mdi-food',
+        'Language': 'mdi-translate',
+        'Science': 'mdi-flask',
+        'Development': 'mdi-code-tags',
+        'Finance': 'mdi-cash-multiple',
+        'Art': 'mdi-palette-swatch',
+        'Education': 'mdi-school',
+        'default': 'mdi-book-open-page-variant'
+    };
+    const categoryColors = [
+        '#4F46E5', // Indigo
+        '#EC4899', // Pink
+        '#10B981', // Emerald
+        '#F59E0B', // Amber
+        '#3B82F6', // Blue
+        '#8B5CF6', // Violet
+        '#EF4444', // Red
+        '#06B6D4', // Cyan
+        '#14B8A6', // Teal
+        '#F97316', // Orange 
+        '#6366F1', // Indigo Alt
+        '#D946EF', // Fuchsia
+        '#84CC16', // Lime
+        '#8B5CF6'  // Violet Alt
+    ];
 const popularCourses = ref([])
-const token = localStorage.getItem('token')
 
+function formatPrice(price) {
+    if (!price) return 'Gratis';
+    // Assuming price is a number or string representing currency
+    return typeof price === 'number' 
+        ? `Rp ${price.toLocaleString('id-ID')}`
+        : price;
+}
 onMounted(async () => {
     try {
-        const response = await axios.get('https://gastric-jeanna-zidanens-73211838.koyeb.app/api/courses', {
-            headers: {
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'application/json',
-            },
-        })
-        popularCourses.value = response.data
+        const [coursesResponse, categoriesResponse] = await Promise.all([
+                axios.get('https://gastric-jeanna-zidanens-73211838.koyeb.app/api/courses'),
+                axios.get('https://gastric-jeanna-zidanens-73211838.koyeb.app/api/categories')
+            ]);
+            popularCourses.value = coursesResponse.data.map(course => ({
+                ...course,
+                price: formatPrice(course.price)
+            }));
+            topCategories.value = categoriesResponse.data.map((category, index) => ({
+                ...category,
+                color: categoryColors[index % categoryColors.length],
+                icon: categoryIcons[category.category_name] || categoryIcons.default
+            }));
         console.log(popularCourses.value)
     } catch (error) {
         console.error('Failed to fetch courses:', error)
@@ -44,16 +79,7 @@ const discussions = ref([
     { id: 3,author: 'Halima', date: 'Senin, 10 Maret 2025', title: 'Makanan Untuk Berbuka Puasa', replies: 1, members: 3 }
 ]);
 
-const logout = async () => {
-  try {
-    await userStore.logoutUserFromAPI()
-    console.log('Logout successful')
-    localStorage.removeItem('token')
-    router.push('/')
-  } catch (error) {
-    console.error('Logout failed:', error)
-  }
-}
+
 </script>
 
 <template>
@@ -133,14 +159,14 @@ const logout = async () => {
                     </v-row>
                     <v-sheet class="d-flex overflow-x-auto" color="transparent">
                         <v-row no-gutters class="flex-nowrap">
-                        <v-col v-for="(category, index) in topCategories" :key="category.name + index" cols="auto" class="pa-2">
+                        <v-col v-for="(category, index) in topCategories" :key="category.category_name + index" cols="auto" class="pa-2">
                             <v-hover v-slot="{ isHovering, props }">
                             <v-card v-bind="props" variant="outlined" width="160" height="160" class="category-card text-center d-flex flex-column align-center justify-center" :class="{ 'scale-up': isHovering }">
                                 <div class="category-icon-wrapper">
                                 <v-icon :icon="category.icon" size="x-large" class="category-icon"></v-icon>
                                 </div>
-                                <div class="text-subtitle-1 font-weight-medium mt-2">{{ category.name }}</div>
-                                <div class="text-caption text-medium-emphasis mt-1">{{ category.courses }} Courses</div>
+                                <div class="text-subtitle-1 font-weight-medium mt-2">{{ category.category_name }}</div>
+                                
                             </v-card>
                             </v-hover>
                         </v-col>
