@@ -71,10 +71,10 @@ const logout = async () => {
                                 Dari menjahit, berkebun, memasak, hingga keterampilan lainnya—jadilah lebih mandiri dan
                                 kreatif bersama kami.
                             </h2>
-                            <v-btn size="large" color="#50478A" elevation="4" class="px-6 py-3" rounded="pill" @click="logout">
+                            <!-- <v-btn size="large" color="#50478A" elevation="4" class="px-6 py-3" rounded="pill" @click="logout">
                                 <v-icon left>mdi-rocket-launch</v-icon>
                                 logout
-                            </v-btn>
+                            </v-btn> -->
                         </div>
                     </v-col>
                     <v-col cols="12" md="6" class="d-flex justify-center align-center">

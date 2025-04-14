@@ -11,8 +11,15 @@
                 'Content-Type': 'application/json',
             },
         })
+
+        const response2 = await axios.get('https://gastric-jeanna-zidanens-73211838.koyeb.app/api/courses/category/1', {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        })
         popularCourses.value = response.data
-        console.log(popularCourses.value)
+        console.log(response2.data)
     } catch (error) {
         console.error('Failed to fetch courses:', error)
     }
