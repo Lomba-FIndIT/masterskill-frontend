@@ -157,21 +157,38 @@ const discussions = ref([
                         </v-btn>
                         </v-col>
                     </v-row>
-                    <v-sheet class="d-flex overflow-x-auto" color="transparent">
-                        <v-row no-gutters class="flex-nowrap">
-                        <v-col v-for="(category, index) in topCategories" :key="category.category_name + index" cols="auto" class="pa-2">
-                            <v-hover v-slot="{ isHovering, props }">
-                            <v-card v-bind="props" variant="outlined" width="160" height="160" class="category-card text-center d-flex flex-column align-center justify-center" :class="{ 'scale-up': isHovering }">
-                                <div class="category-icon-wrapper">
-                                <v-icon :icon="category.icon" size="x-large" class="category-icon"></v-icon>
-                                </div>
-                                <div class="text-subtitle-1 font-weight-medium mt-2">{{ category.category_name }}</div>
-                                
-                            </v-card>
-                            </v-hover>
-                        </v-col>
-                        </v-row>
-                    </v-sheet>
+                    <v-row>
+                    <v-col
+                    v-for="(category, index) in topCategories"
+                    :key="category.category_name + index"
+                    cols="auto"
+                    class="pa-2"
+                    >
+                    <v-hover v-slot="{ isHovering, props }">
+                        <router-link
+                        v-bind="props"
+                        :to="`/akademi/course/category/${category.id}`"
+                        style="display: contents"
+                        >
+                        <v-card
+                            variant="outlined"
+                            width="160"
+                            height="160"
+                            class="category-card text-center d-flex flex-column align-center justify-center"
+                            :class="{ 'scale-up': isHovering }"
+                        >
+                            <div class="category-icon-wrapper">
+                            <v-icon :icon="category.icon" size="x-large" class="category-icon" />
+                            </div>
+                            <div class="text-subtitle-1 font-weight-medium mt-2">
+                            {{ category.category_name }}
+                            </div>
+                        </v-card>
+                        </router-link>
+                    </v-hover>
+                    </v-col>
+                    </v-row>
+
                     </v-col>
                 </v-row>
                 </v-container>

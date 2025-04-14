@@ -1,7 +1,8 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
-
+import { useRoute } from 'vue-router'
+const route = useRoute()
 const popularCourses = ref([])
 const token = localStorage.getItem('token')
 const loading = ref(true)
