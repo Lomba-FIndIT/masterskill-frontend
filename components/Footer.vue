@@ -24,11 +24,11 @@
           <b>Contact</b>
           <div :class="$style.contactItem">
             <!-- <img :class="$style.icon" src="/assets/phone.png" alt="Phone" /> -->
-            <p>Telp. : 021 1500 002</p>
+            <p>Telp. : 021 1666 1022</p>
           </div>
           <div :class="$style.contactItem">
             <!-- <img :class="$style.icon" src="/assets/whats-app.png" alt="WhatsApp" /> -->
-            <p>WhatsApp: 0815 1500 0002</p>
+            <p>WhatsApp: 0812 3457 7430</p>
           </div>
           <div :class="$style.socialIcons">
             <!-- <img :class="$style.socialIcon" src="/assets/twitter-bird.png" alt="Twitter" />
